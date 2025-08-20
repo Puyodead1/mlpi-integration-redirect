@@ -4,28 +4,34 @@
     <meta charset="UTF-8">
     <title>MLPI Integration Redirect</title>
     <script>
-        const params = new URLSearchParams(window.location.search);
-        const data = params.get('data');
+        document.addEventListener("DOMContentLoaded", () => {
+            const params = new URLSearchParams(window.location.search);
+            const data = params.get('data');
+            const message = document.getElementById("message");
 
-        if (data) {
-            const protocolUrl = "mlpi://" + data;
+            if (!message) {
+                console.error("Failed to get message element");
+                return;
+            }
 
-            window.location.href = protocolUrl;
+            if (data) {
+                const protocolUrl = "mlpi://" + data;
+                window.location.href = protocolUrl;
 
-            setTimeout(() => {
-                window.open('', '_self');
-                window.close();
-            }, 1000);
-        } else {
-            document.body.innerText = "No server data provided.";
-        }
+                message.textContent = "The handler should have been triggered. You may now close this page.";
+            } else {
+                message.textContent = "No data provided.";
+            }
+        });
     </script>
 </head>
 <body>
+    <p id="message">Redirecting…</p>
     <p>If nothing happens automatically, click <a id="manualLink">here</a>.</p>
     <script>
         const manualLink = document.getElementById("manualLink");
-        manualLink.href = "mlpi://" + (new URLSearchParams(window.location.search).get('data') || '');
+        const data = new URLSearchParams(window.location.search).get('data') || '';
+        manualLink.href = "mlpi://" + data;
     </script>
 </body>
 </html>
